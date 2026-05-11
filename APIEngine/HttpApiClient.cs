@@ -59,8 +59,7 @@ public class HttpApiClient
         object? body = null,
         CancellationToken cancellationToken = default)
     {
-        var url = $"{_baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
-        var request = CreateRequest(method, url, body);
+        var request = CreateRequest(method, endpoint, body);
 
         await ConfigureRequestAsync(request);
 
@@ -69,9 +68,10 @@ public class HttpApiClient
 
     protected virtual HttpRequestMessage CreateRequest(
         HttpMethod method,
-        string url,
+        string endpoint,
         object? body = null)
     {
+        var url = BuildUrl(endpoint);
         var request = new HttpRequestMessage(method, url);
 
         if (body != null)
@@ -85,4 +85,9 @@ public class HttpApiClient
 
     protected virtual Task ConfigureRequestAsync(HttpRequestMessage request)
         => Task.CompletedTask;
+
+    protected virtual string BuildUrl(string endpoint)
+    {
+        return $"{_baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
+    }
 }
