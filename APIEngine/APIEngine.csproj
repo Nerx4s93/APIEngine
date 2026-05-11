@@ -7,7 +7,7 @@
 		<Nullable>enable</Nullable>
 
 		<PackageId>APIEngine</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>Nerx4s93</Authors>
 		<Description>A lightweight extensible HTTP client engine for building API SDKs with middleware-style request pipelines, low-level HTTP access, and customizable request/response processing.</Description>
 		<PackageTags>http;api;client;sdk;engine;rest;restclient;middleware;httprequest;httpclient;dotnet;serialization;streaming;json</PackageTags>
