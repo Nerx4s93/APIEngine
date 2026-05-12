@@ -41,22 +41,25 @@ public class HttpApiClient
     protected Task<string> PostAsync(
         string endpoint,
         object? body = null,
+        Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
-        => SendAsync(HttpMethod.Post, endpoint, body, cancellationToken);
+        => SendAsync(HttpMethod.Post, endpoint, body, configureRequest, cancellationToken);
 
     protected Task<string> GetAsync(
         string endpoint,
         object? body = null,
+        Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
-        => SendAsync(HttpMethod.Get, endpoint, body, cancellationToken);
+        => SendAsync(HttpMethod.Get, endpoint, body, configureRequest, cancellationToken);
 
     protected async Task<string> SendAsync(
         HttpMethod method,
         string endpoint,
         object? body = null,
+        Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await SendRawAsync(method, endpoint, body, cancellationToken);
+        var response = await SendRawAsync(method, endpoint, body, configureRequest, cancellationToken);
         var text = await response.Content.ReadAsStringAsync(cancellationToken);
 
         if (!response.IsSuccessStatusCode)
@@ -70,24 +73,28 @@ public class HttpApiClient
     protected Task<HttpResponseMessage> PostRawAsync(
         string endpoint,
         object? body = null,
+        Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
-        => SendRawAsync(HttpMethod.Post, endpoint, body, cancellationToken);
+        => SendRawAsync(HttpMethod.Post, endpoint, body, configureRequest, cancellationToken);
 
     protected Task<HttpResponseMessage> GetRawAsync(
         string endpoint,
         object? body = null,
+        Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
-        => SendRawAsync(HttpMethod.Get, endpoint, body, cancellationToken);
+        => SendRawAsync(HttpMethod.Get, endpoint, body, configureRequest, cancellationToken);
 
     protected async Task<HttpResponseMessage> SendRawAsync(
         HttpMethod method,
         string endpoint,
         object? body = null,
+        Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
     {
         var request = CreateRequest(method, endpoint, body);
 
         await ConfigureRequestAsync(request);
+        configureRequest?.Invoke(request);
 
         return await _httpClient.SendAsync(request, cancellationToken);
     }
