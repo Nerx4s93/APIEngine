@@ -1,4 +1,6 @@
 ﻿using APIEngine.Exceptions;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -12,9 +14,27 @@ public class HttpApiClient
     protected readonly HttpClient _httpClient;
     protected readonly string _baseUrl;
 
-    protected HttpApiClient(HttpClient httpClient, string baseUrl)
+    protected HttpApiClient(string baseUrl, ProxyInfo? proxy)
     {
-        _httpClient = httpClient;
+        var handler = new HttpClientHandler();
+        if (proxy != null)
+        {
+            var webProxy = new WebProxy(proxy.Host, proxy.Port);
+
+            if (proxy.HasCredentials)
+            {
+                webProxy.Credentials = new NetworkCredential(proxy.Username, proxy.Password);
+            }
+
+            handler.Proxy = webProxy;
+            handler.UseProxy = true;
+        }
+
+        _httpClient = new HttpClient(handler, disposeHandler: true)
+        {
+            Timeout = TimeSpan.FromSeconds(10)
+        };
+
         _baseUrl = baseUrl;
     }
 
