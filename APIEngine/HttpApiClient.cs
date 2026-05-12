@@ -38,10 +38,16 @@ public class HttpApiClient
         _baseUrl = baseUrl;
     }
 
-    protected Task<string> PostAsync(string endpoint, object? body = null)
+    protected Task<string> PostAsync(
+        string endpoint,
+        object? body = null,
+        CancellationToken cancellationToken = default)
         => SendAsync(HttpMethod.Post, endpoint, body);
 
-    protected Task<string> GetAsync(string endpoint, object? body = null)
+    protected Task<string> GetAsync(
+        string endpoint,
+        object? body = null,
+        CancellationToken cancellationToken = default)
         => SendAsync(HttpMethod.Get, endpoint, body);
 
     protected async Task<string> SendAsync(
