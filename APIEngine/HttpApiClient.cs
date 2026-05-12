@@ -42,13 +42,13 @@ public class HttpApiClient
         string endpoint,
         object? body = null,
         CancellationToken cancellationToken = default)
-        => SendAsync(HttpMethod.Post, endpoint, body);
+        => SendAsync(HttpMethod.Post, endpoint, body, cancellationToken);
 
     protected Task<string> GetAsync(
         string endpoint,
         object? body = null,
         CancellationToken cancellationToken = default)
-        => SendAsync(HttpMethod.Get, endpoint, body);
+        => SendAsync(HttpMethod.Get, endpoint, body, cancellationToken);
 
     protected async Task<string> SendAsync(
         HttpMethod method,
