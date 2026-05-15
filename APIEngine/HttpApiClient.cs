@@ -59,7 +59,7 @@ public class HttpApiClient
         Action<HttpRequestMessage>? configureRequest = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await SendRawAsync(method, endpoint, body, configureRequest, cancellationToken);
+        var response = await SendRawAsync(method, endpoint, body, configureRequest, cancellationToken: cancellationToken);
         var text = await response.Content.ReadAsStringAsync(cancellationToken);
 
         if (!response.IsSuccessStatusCode)
@@ -74,21 +74,24 @@ public class HttpApiClient
         string endpoint,
         object? body = null,
         Action<HttpRequestMessage>? configureRequest = null,
+        HttpCompletionOption completion = HttpCompletionOption.ResponseContentRead,
         CancellationToken cancellationToken = default)
-        => SendRawAsync(HttpMethod.Post, endpoint, body, configureRequest, cancellationToken);
+        => SendRawAsync(HttpMethod.Post, endpoint, body, configureRequest, completion, cancellationToken);
 
     protected Task<HttpResponseMessage> GetRawAsync(
         string endpoint,
         object? body = null,
         Action<HttpRequestMessage>? configureRequest = null,
+        HttpCompletionOption completion = HttpCompletionOption.ResponseContentRead,
         CancellationToken cancellationToken = default)
-        => SendRawAsync(HttpMethod.Get, endpoint, body, configureRequest, cancellationToken);
+        => SendRawAsync(HttpMethod.Get, endpoint, body, configureRequest, completion, cancellationToken);
 
     protected async Task<HttpResponseMessage> SendRawAsync(
         HttpMethod method,
         string endpoint,
         object? body = null,
         Action<HttpRequestMessage>? configureRequest = null,
+        HttpCompletionOption completion = HttpCompletionOption.ResponseContentRead,
         CancellationToken cancellationToken = default)
     {
         var request = CreateRequest(method, endpoint, body);
@@ -96,7 +99,7 @@ public class HttpApiClient
         await ConfigureRequestAsync(request);
         configureRequest?.Invoke(request);
 
-        return await _httpClient.SendAsync(request, cancellationToken);
+        return await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
     }
 
     protected virtual HttpRequestMessage CreateRequest(

@@ -9,7 +9,7 @@
 
 ## Установка
 ``` bash
-dotnet add package APIEngine --version 1.0.2
+dotnet add package APIEngine --version 1.0.3
 ```
 
 ## Основные компоненты

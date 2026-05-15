@@ -8,7 +8,7 @@ Suitable as a base layer for automation tools, custom API clients, and microserv
 
 ## Installation
 ``` bash
-dotnet add package APIEngine --version 1.0.2
+dotnet add package APIEngine --version 1.0.3
 ```
 
 ## Core Components
